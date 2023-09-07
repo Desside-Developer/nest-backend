@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TestModule } from './test/test.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from './users/users.module';
 
 
 @Module({
@@ -17,6 +18,7 @@ import { ConfigModule } from '@nestjs/config';
       host: 'localhost',
       port: 3306,
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
