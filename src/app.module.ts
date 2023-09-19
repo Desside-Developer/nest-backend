@@ -9,7 +9,7 @@ import { UsersModule } from './users/users.module';
   imports: [
     TestModule,
     ConfigModule.forRoot({
-      envFilePath: '../.env',
+      envFilePath: ['.env'],
     }),
     TypeOrmModule.forRoot({
       type: 'mariadb',
