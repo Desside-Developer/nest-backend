@@ -9,7 +9,7 @@ import { UsersModule } from './users/users.module';
   imports: [
     TestModule,
     ConfigModule.forRoot({
-      envFilePath: 'env',
+      envFilePath: '../.env',
     }),
     TypeOrmModule.forRoot({
       type: 'mariadb',
@@ -18,9 +18,8 @@ import { UsersModule } from './users/users.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DATABASE,
-      entities: ['dist/entities/**/*.entity.js'],
+      entities: [],
       synchronize: Boolean(process.env.SYNCHRONIZE),
-      // migrations: [ 'dist/db/migrations/**/*.js ]
     }),
     UsersModule,
   ],
