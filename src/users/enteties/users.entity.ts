@@ -3,12 +3,14 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity('users')
 export class UsersEntity {
   @PrimaryGeneratedColumn({type:'number'})
-  id: number;
+  id:number;
   @Column({type:'string'})
-  firstName: string;
+  username: string;
   @Column({type:'string'})
-  lastName: string;
-  @Column({default:true})
+  password: string;
+  @Column({type:'string', nullable:true})
+  user: string;
+  @Column({default:true, nullable: true})
   isActive: boolean;
   @Column({unique:true,type:'string'})
   email: string;
