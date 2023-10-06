@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { TestModule } from './test/test.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
+import {AppService} from "./app.service";
 
 @Module({
   imports: [
-    TestModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
     }),
@@ -18,13 +17,13 @@ import { UsersModule } from './users/users.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DATABASE,
-      entities: [],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       // synchronize: Boolean(process.env.SYNCHRONIZE),
       synchronize: true,
     }),
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [AppService],
 })
 export class AppModule {}
