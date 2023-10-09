@@ -4,17 +4,16 @@ import { CreateUserDto } from '../dto/user.dto';
 
 @Controller('/users')
 export class UsersController {
-    constructor(private readonly usersService: UsersService) {}
-
-    @Post('/reg')
-    async createUser(@Body() createUserDto: CreateUserDto) {
-        await this.usersService.createUser(createUserDto);
-        const recordDB =
-        if (recordDB === 'success'){
-            return 'recording in DB is ok';
-        } else {
-            return 'Error';
-        }
+  constructor(private readonly usersService: UsersService) {}
+  // Error Handler почитать
+  @Post('/reg')
+  async createUser(@Body() createUserDto: CreateUserDto) {
+    await this.usersService.createUser(createUserDto);
+    const recordDB = await this.usersService.createUser(createUserDto);
+    if (recordDB === 'success') {
+      return 'recording in DB is ok';
+    } else {
+      return 'Error';
     }
+  }
 }
-// Error Handler почитать

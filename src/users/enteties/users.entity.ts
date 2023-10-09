@@ -4,10 +4,10 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 export class UsersEntity {
   @PrimaryGeneratedColumn({})
   id: number;
-  @Column({ type: 'longtext' })
+  @Column({ type: 'text' })
   username: string;
-  @Column({ type: 'longtext' })
+  @Column({ type: 'text' })
   password: string;
-  @Column({ type: 'longtext', unique: true })
+  @Column({ type: 'text', unique: true })
   email: string;
 }

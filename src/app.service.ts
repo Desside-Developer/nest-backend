@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-    constructor() { }
+  constructor() {}
 
-    showMessage(): string {
-        const message = 'Пример';
-        console.log(message);
-        return message;
-    }
+  showMessage(): string {
+    const message = 'Пример';
+    console.log(message);
+    return message;
+  }
 }
