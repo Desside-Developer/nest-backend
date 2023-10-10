@@ -9,10 +9,9 @@ export class UsersController {
   // Error Handler почитать
   @Post('/reg')
   async createUser(@Body() createUserDto: CreateUserDto) {
-    await this.usersService.createUser(createUserDto);
     const recordDB = await this.usersService.createUser(createUserDto);
     if (recordDB === 'success') {
-      return 'recording in DB is ok';
+      return 'Recording in DB is ok';
     } else {
       return 'Error';
     }
