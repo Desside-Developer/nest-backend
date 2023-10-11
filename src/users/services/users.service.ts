@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-// import { JwtService } from '@nestjs/jwt'; // JWT
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { UsersEntity } from '../enteties/users.entity';
@@ -54,10 +54,10 @@ export class UsersService {
       return { message: 'user not found' };
     }
   }
-  // async login(user: UsersEntity) {
-  //   const payload = { username: user.username, sub: user.id };
-  //   return {
-  //     access_token: this.jwtService.sign(payload),
-  //   };
-  // }
+  async login(user: UsersEntity) {
+    const payload = { username: user.username, sub: user.id };
+    return {
+      access_token: this.JwtService.sign(payload),
+    };
+  }
 }
