@@ -10,8 +10,8 @@ export class UsersService {
   constructor(
     @InjectRepository(UsersEntity)
     private readonly Repository: Repository<UsersEntity>,
+    private readonly jwtService: JwtService,
   ) {}
-  // private readonly jwtService: JwtService,
 
   async createUser(data) {
     const hash = await bcrypt.hash(data.password, 10);
@@ -34,7 +34,9 @@ export class UsersService {
           userEmail.password,
         );
         if (decryptPass) {
-          return userEmail;
+          return {
+            access_token: await this.jwtService.signAsync(userEmail),
+          };
         } else {
           return { message: 'Password do not correct' };
         }
@@ -46,18 +48,14 @@ export class UsersService {
         userName.password,
       );
       if (decryptPass) {
-        return userName;
+        return {
+          access_token: await this.jwtService.signAsync(userName),
+        };
       } else {
         return { message: 'Password is not correct' };
       }
     } else {
       return { message: 'user not found' };
     }
-  }
-  async login(user: UsersEntity) {
-    const payload = { username: user.username, sub: user.id };
-    return {
-      access_token: this.JwtService.sign(payload),
-    };
   }
 }
