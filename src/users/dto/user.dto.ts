@@ -1,4 +1,4 @@
-import { IsString, MinLength, MaxLength, IsEmail } from "class-validator";
+import { IsString, MinLength, MaxLength, IsEmail, Matches } from "class-validator";
 
 export class CreateUserDto {
   @IsString()
@@ -6,8 +6,12 @@ export class CreateUserDto {
   @MaxLength(20)
   username: string;
   @IsString()
-  @MinLength(6)
-  @MaxLength(20)
+  @MinLength(6, { message: 'Пароль должен содержать минимум 6 символов' })
+  @MaxLength(20, { message: 'Пароль должен содержать максимум 20 символов' })
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]/, {
+    message:
+      'Пароль должен содержать хотя бы одну строчную букву, одну заглавную букву и одну цифру',
+  })
   password: string;
   @IsEmail()
   @MinLength(6)
