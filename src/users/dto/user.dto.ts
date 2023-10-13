@@ -13,6 +13,10 @@ export class CreateUserDto {
   @MinLength(6)
   @MaxLength(20)
   email: string;
+  @IsString()
+  @MinLength(6)
+  @MaxLength(20)
+  repeatPass: string;
 }
 export class AuthDto {
   @IsString()

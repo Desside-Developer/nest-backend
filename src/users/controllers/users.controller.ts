@@ -11,8 +11,8 @@ export class UsersController {
     return await this.usersService.createUser(createUserDto);
   }
   // ( Post /auth ) аутификация пользователя.
-  @Post('/auth')
-  async authUser(@Body() authDto: AuthDto) {
-    return await this.usersService.authUser(authDto);
-  }
+  // @Post('/auth')
+  // async authUser(@Body() authDto: AuthDto) {
+  //   return await this.usersService.authUser(authDto);
+  // }
 }
