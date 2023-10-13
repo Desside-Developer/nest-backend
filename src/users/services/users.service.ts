@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -12,7 +12,7 @@ export class UsersService {
     private readonly Repository: Repository<UsersEntity>,
     private readonly jwtService: JwtService,
   ) {}
-
+  // Регистрация пользователя ( ниже )
   async createUser(data) {
     const hash = await bcrypt.hash(data.password, 10);
     const userReg = this.Repository.create({
@@ -20,42 +20,35 @@ export class UsersService {
       password: hash,
       email: data.email,
     });
-    console.log(userReg);
     await this.Repository.save(userReg);
-    return 'success';
+    return { message: 'Пользователь создан!' };
   }
+  // Аутификация пользователя ( ниже )
+  jwt = require('jsonwebtoken');
   async authUser(data) {
-    const userName = await this.Repository.findOneBy({ username: data.username });
-    if (!userName) {
-      const userEmail = await this.Repository.findOneBy({ email: data.email });
-      if (userEmail) {
-        const decryptPass = await bcrypt.compare(
-          data.password,
-          userEmail.password,
-        );
-        if (decryptPass) {
-          return {
-            access_token: await this.jwtService.signAsync(userEmail),
-          };
-        } else {
-          return { message: 'Password do not correct' };
-        }
-      }
-    }
-    if (userName) {
-      const decryptPass = await bcrypt.compare(
+    const checkUser = await this.Repository.findOneBy({
+      username: data.login,
+      email: data.login,
+    });
+    if (checkUser) {
+      const bcryptPass = await bcrypt.compare(
         data.password,
-        userName.password,
+        checkUser.password,
       );
-      if (decryptPass) {
-        return {
-          access_token: await this.jwtService.signAsync(userName),
-        };
+      if (bcryptPass) {
+        const token = this.jwt.sign(
+          {
+            userId: checkUser.id, // логика определения
+          },
+          'secret-key', // секретный ключ
+          { expiresIn: '5h' }, // Указываем время жизни токена (5 часов)
+        );
+        return checkUser;
       } else {
-        return { message: 'Password is not correct' };
+        return { message: 'Пароль не корректный' }; // Error Handler
       }
     } else {
-      return { message: 'user not found' };
+      return { message: 'Пользователь не был найден' }; // Error Handler добавить сюда
     }
   }
 }

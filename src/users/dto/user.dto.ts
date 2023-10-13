@@ -14,3 +14,13 @@ export class CreateUserDto {
   @MaxLength(20)
   email: string;
 }
+export class AuthDto {
+  @IsString()
+  @MinLength(6)
+  @MaxLength(20)
+  login: string;
+  @IsString()
+  @MinLength(6)
+  @MaxLength(20)
+  password: string;
+}
