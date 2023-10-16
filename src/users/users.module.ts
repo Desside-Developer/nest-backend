@@ -5,14 +5,14 @@ import { UsersService } from './services/users.service';
 import { UsersEntity } from './enteties/users.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { OfferEntity } from './enteties/offer.entity';
-import * as process from 'process';
-// import { MailerModule } from '@nestjs-modules/mailer';
-// import { mailerConfig } from './mailer.config';
+import { FindService } from './services/find.service';
+import { AuthService } from './services/auth.service';
+import { FindController } from './controllers/find.controller';
+import { AuthController } from './controllers/auth.controller';
 
 @Module({
-  providers: [UsersService],
-  controllers: [UsersController],
+  providers: [UsersService, FindService, AuthService],
+  controllers: [UsersController, FindController, AuthController],
   imports: [
     PassportModule,
     JwtModule.register({
@@ -21,7 +21,7 @@ import * as process from 'process';
       signOptions: { expiresIn: '5h' },
     }),
     // MailerModule.forRoot(mailerConfig),
-    TypeOrmModule.forFeature([UsersEntity, OfferEntity]),
+    TypeOrmModule.forFeature([UsersEntity]),
   ],
 })
 export class UsersModule {}
