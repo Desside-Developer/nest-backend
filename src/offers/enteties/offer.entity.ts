@@ -5,7 +5,13 @@ export class OfferEntity {
   @PrimaryGeneratedColumn({})
   id: number;
   @Column({ type: 'text', nullable: true })
-  show: string;
+  name: string;
   @Column({ type: 'text' })
-  info: string;
+  url: string;
+  @Column({ type: 'text' })
+  domain: string;
+  @Column({ type: 'text' })
+  offer: string;
+  @Column({ type: 'text' })
+  auths: string;
 }

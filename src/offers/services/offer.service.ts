@@ -19,8 +19,9 @@ export class OfferService {
   async fetchAndSaveOffers(show = 500) {
     try {
       let offset = 0;
-      const processedOffers = new Set<number>();
+      const processedOffers = new Set<number>(); // создаем множество для отслеживания обработанных 'offset'
       while (true) {
+        // запрос к Api используя 'fetchOffersFromApi' с которого мы получаем данные 'show' и 'offset'
         if (processedOffers.has(offset)) {
           break; // Прерываем цикл, если уже обработали этот offset
         }
@@ -28,6 +29,7 @@ export class OfferService {
         if (Object.keys(apiData).length === 0) {
           break; // Стопаем цикл если нет данных
         }
+        // те данные которые мы получаем преобразуются в обьекты с функцией ( ниже )
         const offers = this.transformApiDataToOffers(apiData);
         await this.saveOffersToDatabase(offers);
         processedOffers.add(offset);
@@ -38,24 +40,31 @@ export class OfferService {
       throw new Error('Произошла ошибка: ' + error.message);
     }
   }
-  async fetchOffersFromApi(show: number, offset: number) {
+  async fetchOffersFromApi(show, offset) {
+    // Выполняем запрос к Api используем при этом axios и не замечаем что асинхронная функция называется fetch.
     const apiUrl = `https://cpaw.cat/api/mon/offers.json?token=27d8de1e8dcc117efecaeb41a735f894c79&show=${show}&offset=${offset}`;
     const response = await axios.get(apiUrl);
     return response.data.offers;
   }
-  transformApiDataToOffers(apiData: any): OfferEntity[] {
+  transformApiDataToOffers(apiData): OfferEntity[] {
     const offers: OfferEntity[] = [];
     for (const key in apiData) {
       const apiOffer = apiData[key];
       const offer = new OfferEntity();
       offer.id = apiOffer.id;
-      offer.show = apiOffer.name;
-      offer.info = apiOffer.info; // Записываем в колонки то что получаем
+      offer.name = apiOffer.name;
+      offer.url = apiOffer.info; // Записываем в колонки то что получаем
       offers.push(offer);
     }
     return offers;
   }
+
   async saveOffersToDatabase(offers: OfferEntity[]) {
-    return await this.OfferRepository.save(offers);
+    const savedOffers = await this.OfferRepository.save(offers);
+    // Выводим сохраненные предложения в консоль
+    savedOffers.forEach((offer) => {
+      console.log('Saved offer:', offer);
+    });
+    return savedOffers;
   }
 }
