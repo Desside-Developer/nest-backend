@@ -6,6 +6,6 @@ export class OfferController {
   constructor(private readonly offerService: OfferService) {}
   @Get('/api/save')
   async getApiReq() {
-    return await this.offerService.fetchAndSaveOffers();
+    return await this.offerService.saveOffers();
   }
 }
