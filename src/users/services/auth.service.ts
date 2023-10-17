@@ -12,8 +12,7 @@ export class AuthService {
     @InjectRepository(UsersEntity)
     private readonly AuthRepository: Repository<UsersEntity>,
     private jwtService: JwtService,
-  ) {
-  }
+  ) {}
 
   async authUser(UserInfo: AuthDto) {
     try {
@@ -31,8 +30,11 @@ export class AuthService {
           );
           if (bcryptUsername) {
             const token = await this.createJwtToken(usernameCheck);
-            console.log(token);
-            return usernameCheck;
+            return {
+              // access_token: token,
+              id: usernameCheck.id,
+              // email: usernameCheck.email,
+            };
           } else {
             return { message: 'Пароль неверный' };
           }
@@ -46,10 +48,13 @@ export class AuthService {
         );
         if (bcryptEmail) {
           const token = await this.createJwtToken(checkEmail);
-          console.log(token);
-          return checkEmail;
+          return {
+            // access_token: token,
+            id: checkEmail.id,
+            // email: checkEmail.email,
+          };
         } else {
-          return { message: 'Пароь неверный' };
+          return { message: 'Пароль неверный' };
         }
       }
     } catch (error) {
@@ -57,7 +62,11 @@ export class AuthService {
     }
   }
   async createJwtToken(user) {
-    const userPayload = { username: user.username, sub: user.id };
+    const userPayload = {
+      username: user.username,
+      email: user.email,
+      password: user.password,
+    };
     return this.jwtService.sign(userPayload);
   }
 }
