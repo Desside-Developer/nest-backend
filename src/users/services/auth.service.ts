@@ -31,9 +31,9 @@ export class AuthService {
           if (bcryptUsername) {
             const token = await this.createJwtToken(usernameCheck);
             return {
-              // access_token: token,
+              access_token: token,
               id: usernameCheck.id,
-              // email: usernameCheck.email,
+              email: usernameCheck.email,
             };
           } else {
             return { message: 'Пароль неверный' };
@@ -49,9 +49,9 @@ export class AuthService {
         if (bcryptEmail) {
           const token = await this.createJwtToken(checkEmail);
           return {
-            // access_token: token,
+            access_token: token,
             id: checkEmail.id,
-            // email: checkEmail.email,
+            email: checkEmail.email,
           };
         } else {
           return { message: 'Пароль неверный' };
