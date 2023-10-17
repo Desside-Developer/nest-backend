@@ -10,7 +10,7 @@ export class UsersEntity {
   email: string;
   @Column({ type: 'text' })
   password: string;
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   ApiToken: string;
   // Для паботы почтового сервиса
   @Column({ nullable: true })
