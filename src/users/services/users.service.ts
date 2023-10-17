@@ -15,7 +15,7 @@ export class UsersService {
   // Регистрация пользователя ( ниже )
   async createUser(data) {
     try {
-      const confirmationToken = randomBytes(16).toString('hex');
+      // const confirmationToken = randomBytes(16).toString('hex');
       if (!EmailValidator.validate(data.email)) {
         return { message: 'Некорректный формат email-адреса' };
       }
@@ -24,7 +24,7 @@ export class UsersService {
         username: data.username,
         email: data.email,
         password: hash,
-        confirmationToken,
+        // confirmationToken,
       });
       if (data.password === data.repeatPass) {
         const checkEmailUser = await this.Repository.findOne({
