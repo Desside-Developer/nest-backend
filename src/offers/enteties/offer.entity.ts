@@ -4,7 +4,9 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 export class OfferEntity {
   @PrimaryGeneratedColumn({})
   id: number;
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text' })
+  OfferId: string;
+  @Column({ type: 'text' })
   name: string;
   @Column({ type: 'text' })
   url: string;

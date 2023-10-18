@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OfferEntity } from '../enteties/offer.entity';
 import { Repository } from 'typeorm';
-import { Cron, CronExpression } from '@nestjs/schedule';
-import axios from 'axios';
+import axios from "axios";
 
 @Injectable()
 export class OfferService {
@@ -39,19 +38,72 @@ export class OfferService {
   //     }
   //   }
   // }
-  async saveOffers() {
-    const show = 500;
-    let offset = 0;
-    let offsets = [];
-    const apiData = await this.offersApi(show, offset);
-    for () {
-
-    }
-  }
-
-  async offersApi(show, offset) {
-    const apiUrl = `https://cpaw.cat/api/mon/offers.json?token=27d8de1e8dcc117efecaeb41a735f894c79&show=${show}&offset=${offset}`;
-    const response = await axios.get(apiUrl);
-    return response.data.offers;
-  }
+  // async saveOffers() {
+  //   const show = 500;
+  //   let offset = 0;
+  //   let allOffers = [];
+  //   const apiData = await this.offersApi(show, offset);
+  //   if (typeof apiData === 'object' && Object.keys(apiData).length > 0) {
+  //     for (const key in apiData) {
+  //       const apiOffer = apiData[key];
+  //       const offer = this.OfferRepository.create({
+  //         OfferId: apiOffer.id,
+  //         name: apiOffer.name,
+  //         domain: apiOffer.domain,
+  //         offer: apiOffer.offer,
+  //         auths: apiOffer.auths,
+  //       });
+  //       const savedOffer = await this.OfferRepository.save(offer);
+  //       allOffers.push(savedOffer);
+  //     }
+  //     return console.log(allOffers);
+  //   } else {
+  //     return `Все данные успешно получены и сохранены. Всего получено ${allOffers.length} предложений.`;
+  //   }
+  // }
+  //
+  // async offersApi(show, offset) {
+  //   const apiUrl = `https://cpaw.cat/api/mon/network.json?token=27d8de1e8dcc117efecaeb41a735f894c79`;
+  //   const response = await axios.get(apiUrl);
+  //   return response.data.offers;
+  // }
+  // async saveOffers() {
+  //   const show = 500;
+  //   let offset = 0;
+  //   let allOffers = [];
+  //   let apiData = await this.offersApi(show, offset);
+  //   console.log(apiData);
+  //   for (let offset = 0; Array.isArray(apiData) && apiData.length > 0; offset += show) {
+  //     apiData = await this.offersApi(show, offset);
+  //     try {
+  //       const offers = apiData.map((apiOffer) => {
+  //         return this.OfferRepository.create({
+  //           offer: apiOffer.id,
+  //           name: apiOffer.name,
+  //           url: apiOffer.info,
+  //         });
+  //       });
+  //       // await this.OfferRepository.save(offers);
+  //       console.log('Offers saved:', offers.length);
+  //       allOffers = allOffers.concat(offers);
+  //     } catch (error) {
+  //       console.error('Ошибка при сохранении данных в базу:', error);
+  //     }
+  //   }
+  // }
+  //
+  // async offersApi(show, offset) {
+  //   const apiUrl = `https://cpaw.cat/api/mon/network.json?token=27d8de1e8dcc117efecaeb41a735f894c79`;
+  //   const response = await axios.get(apiUrl);
+  //   return response.data.offers;
+  // }
+  // async saveOffersFromJson(apiData: Record<string, any>) {
+  //   const offersToSave = Object.values(apiData).map(({ id, name, domain }) => ({
+  //     OfferId: id.toString(),
+  //     name,
+  //     domain,
+  //   }));
+  //
+  //   await this.OfferRepository.save(offersToSave);
+  // }
 }
