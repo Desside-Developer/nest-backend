@@ -32,3 +32,19 @@ export class AuthDto {
   @MaxLength(20)
   password: string;
 }
+export class TokenDto {
+  @IsEmail()  
+  email: string;
+  @IsString()
+  @MinLength(6)
+  @MaxLength(20)
+  token: string;
+}
+export class NetworkDto {
+  @IsEmail()
+  email: string;
+  @IsString()
+  @MinLength(6)
+  @MaxLength(20)
+  password: string;
+}

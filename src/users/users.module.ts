@@ -6,13 +6,11 @@ import { UsersEntity } from './enteties/users.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { FindService } from './services/find.service';
-import { AuthService } from './services/auth.service';
 import { FindController } from './controllers/find.controller';
-import { AuthController } from './controllers/auth.controller';
 
 @Module({
-  providers: [UsersService, FindService, AuthService],
-  controllers: [UsersController, FindController, AuthController],
+  providers: [UsersService, FindService],
+  controllers: [UsersController, FindController],
   imports: [
     PassportModule,
     JwtModule.register({

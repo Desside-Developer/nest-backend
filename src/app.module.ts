@@ -8,10 +8,12 @@ import * as process from 'process';
 import { JwtModule } from '@nestjs/jwt';
 import { OfferModule } from './offers/offer.module';
 import { CronModule } from './cron/cron.module';
+import {NetworkModule} from "./network/network.module";
 @Module({
   imports: [
     UsersModule,
     OfferModule,
+    NetworkModule,
     CronModule,
     ConfigModule.forRoot({
       envFilePath: '.env',

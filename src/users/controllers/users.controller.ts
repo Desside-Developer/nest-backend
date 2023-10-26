@@ -3,10 +3,10 @@ import {
   Post,
   Body,
   UsePipes,
-  ValidationPipe,
+  ValidationPipe, Res,
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import { CreateUserDto } from '../dto/user.dto';
+import {AuthDto, CreateUserDto, TokenDto} from '../dto/user.dto';
 @Controller('/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -17,6 +17,17 @@ export class UsersController {
   async createUser(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.createUser(createUserDto);
   }
-  // Настраиваем для тестирования http запросов curl * отдельно
-  // -
+  @Post('/user')
+  async AuthUser(@Body() authDto: AuthDto, @Res() response) {
+    try {
+      const result = await this.usersService.authUser(authDto);
+      response.status(200).json(result);
+    } catch (error) {
+      response.status(400).json({ message: error.message });
+    }
+  }
+  @Post('/token')
+  async TokenUser(@Body() tokenDto: TokenDto) {
+    return await this.usersService.saveToken(tokenDto);
+  }
 }
