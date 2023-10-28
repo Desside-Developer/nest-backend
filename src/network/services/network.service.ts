@@ -23,7 +23,7 @@ export class NetworkService {
             return { message: 'Your email not corrected!' };
         } else {
             const checkUserPass = await bcrypt.compare(
-              data.password,
+              String(data.password),
               findOneByEmailUser.password
             );
             if (checkUserPass) {
@@ -41,17 +41,16 @@ export class NetworkService {
         return response.data;
     }
     async saveDataNetworks(data) {
-        console.log(data);
         const networkEntities = [];
         for (const key in data) {
             const networkData = data[key];
-            const authsString = Array.isArray(networkData.auths) ? networkData.auths.join(', ') : '';
+            // const authsString = Array.isArray(networkData.auths) ? networkData.auths.join(', ') : '';
             const createNetworks = this.NetworkRepository.create({
                 OfferId: networkData.id,
                 name: networkData.name,
                 domain: networkData.domain,
                 offer: networkData.offer,
-                auths: authsString,
+                auths: networkData.auths,
             });
             networkEntities.push(createNetworks);
         }
@@ -61,5 +60,8 @@ export class NetworkService {
         } catch (error) {
             console.error("Error saving data:", error);
         }
+    }
+    async clearDataNetworks() {
+
     }
 }

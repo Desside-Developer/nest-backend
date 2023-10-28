@@ -4,14 +4,14 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 export class NetworkEntity {
     @PrimaryGeneratedColumn({})
     id: number;
-    @Column({ type: 'longtext' })
+    @Column({ type: 'longtext', nullable: true })
     OfferId: string;
-    @Column({ type: 'text' })
+    @Column({ type: 'text', nullable: true })
     name: string;
-    @Column({ type: 'text' })
+    @Column({ type: 'text', nullable: true })
     domain: string;
-    @Column({ type: 'text' })
-    offer: string;
-    @Column({ type: 'text' })
-    auths: string;
+    @Column({ type: 'boolean', nullable: true })
+    offer: boolean;
+    @Column({ type: 'json', nullable: true })
+    auths: Record<string, any>;
 }
