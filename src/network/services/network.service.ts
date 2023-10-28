@@ -23,16 +23,16 @@ export class NetworkService {
             return { message: 'Your email not corrected!' };
         } else {
             const checkUserPass = await bcrypt.compare(
-                findOneByEmailUser.password,
-                data.password
+              data.password,
+              findOneByEmailUser.password
             );
-            if (checkUserPass !== null) {
+            if (checkUserPass) {
                 const user = await this.networksApiUrl(findOneByEmailUser.ApiToken);
                 await this.saveDataNetworks(user);
+                return { message: 'User found, and save database.' }
             } else {
                 return { message: 'Your password not corrected!' };
             }
-            return { message: 'User found, and save database.' }
         }
     }
     async networksApiUrl(ApiToken) {
@@ -40,15 +40,26 @@ export class NetworkService {
         const response = await axios.get(getApiNetworks);
         return response.data;
     }
-    async saveDataNetworks(data: any){
-        const createNetworks = this.NetworkRepository.create(data);
-        await this.NetworkRepository.save({
-            OfferId: data.id,
-            name: data.name,
-            domain: data.domain,
-            offer: data.offer,
-            auths: data.auths,
-        });
-        // сохранение в базу
+    async saveDataNetworks(data) {
+        console.log(data);
+        const networkEntities = [];
+        for (const key in data) {
+            const networkData = data[key];
+            const authsString = Array.isArray(networkData.auths) ? networkData.auths.join(', ') : '';
+            const createNetworks = this.NetworkRepository.create({
+                OfferId: networkData.id,
+                name: networkData.name,
+                domain: networkData.domain,
+                offer: networkData.offer,
+                auths: authsString,
+            });
+            networkEntities.push(createNetworks);
+        }
+        try {
+            await this.NetworkRepository.save(networkEntities);
+            console.log("Data saved successfully");
+        } catch (error) {
+            console.error("Error saving data:", error);
+        }
     }
 }

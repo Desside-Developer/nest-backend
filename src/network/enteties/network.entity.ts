@@ -4,7 +4,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 export class NetworkEntity {
     @PrimaryGeneratedColumn({})
     id: number;
-    @Column({ type: 'text', nullable: true })
+    @Column({ type: 'longtext' })
     OfferId: string;
     @Column({ type: 'text' })
     name: string;

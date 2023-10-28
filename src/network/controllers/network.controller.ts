@@ -7,6 +7,6 @@ export class NetworkController {
     constructor(private readonly networkService: NetworkService) {}
     @Post('/createAndSave')
     async createAndSaveNetworks(@Body() checkUserEmailAndPass: NetworkDto) {
-        const networkData = await this.networkService.networkSave(checkUserEmailAndPass);
+        return await this.networkService.networkSave(checkUserEmailAndPass);
     }
 }
