@@ -3,10 +3,11 @@ import {
   Post,
   Body,
   UsePipes,
-  ValidationPipe, Res,
+  ValidationPipe,
+  Res,
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import {AuthDto, CreateUserDto, TokenDto} from '../dto/user.dto';
+import { AuthDto, CreateUserDto, TokenDto } from '../dto/user.dto';
 @Controller('/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

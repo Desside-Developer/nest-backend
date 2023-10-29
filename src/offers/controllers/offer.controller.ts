@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { OfferService } from '../services/offer.service';
+import { OfferDto } from "../../users/dto/user.dto";
 
 @Controller('/offer')
 export class OfferController {
@@ -16,4 +17,8 @@ export class OfferController {
   // async saveOffersFromApi(@Body() apiData: Record<string, any>) {
   //   await this.offerService.saveOffersFromJson(apiData);
   // }
+  @Post('/saveOffers')
+  async saveOffersData(@Body() offerDto: OfferDto) {
+    return await this.offerService.offerSave(offerDto);
+  }
 }

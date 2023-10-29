@@ -47,3 +47,10 @@ export class NetworkDto {
   @MaxLength(20)
   password: any;
 }
+export class OfferDto {
+  @IsEmail()
+  email: string;
+  @MinLength(6)
+  @MaxLength(20)
+  password: any;
+}

@@ -2,14 +2,90 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OfferEntity } from '../enteties/offer.entity';
 import { Repository } from 'typeorm';
-import axios from "axios";
+import axios from 'axios';
+import { NetworkEntity } from '../../network/enteties/network.entity';
+import { UsersEntity } from '../../users/enteties/users.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class OfferService {
   constructor(
     @InjectRepository(OfferEntity)
     private readonly OfferRepository: Repository<OfferEntity>,
+    @InjectRepository(UsersEntity)
+    private readonly UsersRepository: Repository<UsersEntity>,
   ) {}
+  async offerSave(data) {
+    const findOneByEmailUser = await this.UsersRepository.findOneBy({
+      email: data.email,
+    });
+    if (!findOneByEmailUser) {
+      return { message: 'Your email not corrected!' };
+    } else {
+      const checkUserPass = await bcrypt.compare(
+        String(data.password),
+        findOneByEmailUser.password,
+      );
+      if (checkUserPass) {
+        if (findOneByEmailUser.ApiToken === null) {
+          return { message: 'You dont have ApiToken' };
+        } else {
+          const user = await this.offersApiUrl(findOneByEmailUser.ApiToken);
+          await this.clearDataOffers();
+          await this.saveDataOffers(user);
+          return { message: 'User found, and save database.' };
+        }
+      } else {
+        return { message: 'Your password not corrected!' };
+      }
+    }
+  }
+  async offersApiUrl(ApiToken) {
+    const getApiNetworks = `https://cpaw.cat/api/mon/offer.json?token=${ApiToken}`;
+    const headers = {
+      offset: 0,
+      show: 500,
+    };
+    const response = await axios.get(getApiNetworks);
+    return response.data;
+  }
+  async saveDataOffers(data) {
+    const offerEntities = [];
+    for (const key in data) {
+      const offerData = data[key];
+      const createNetworks = this.OfferRepository.create({
+        OfferId: offerData.id,
+        active: offerData.active,
+        name: offerData.name,
+        info: offerData.info,
+        nid: offerData.nid,
+        network: offerData.network,
+        url: offerData.url,
+        add: offerData.add,
+        time: offerData.time,
+        date: offerData.date,
+        first: offerData.first,
+        sub: offerData.sub,
+        goal: offerData.goal,
+        goals: offerData.goals,
+        geo: offerData.geo,
+        private: offerData.private,
+      });
+      offerEntities.push(createNetworks);
+    }
+    try {
+      await this.OfferRepository.save(offerEntities);
+      console.log('Data saved successfully');
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  }
+  async clearDataOffers() {
+    await this.OfferRepository.createQueryBuilder('networks')
+      .delete()
+      .from(NetworkEntity)
+      .execute();
+  }
 
   // Watch Kitty Api (InfoOffers)
   // @Cron(CronExpression.EVERY_DAY_AT_2AM)
