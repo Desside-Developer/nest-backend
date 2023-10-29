@@ -2,9 +2,10 @@ import {Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {UsersEntity} from "../../users/enteties/users.entity";
 import {NetworkEntity} from "../enteties/network.entity";
-import {Repository} from "typeorm";
+import {Repository,GetRepository} from "typeorm";
 import * as bcrypt from 'bcrypt';
 import axios from "axios";
+import any = jasmine.any;
 
 
 @Injectable()
@@ -28,6 +29,7 @@ export class NetworkService {
             );
             if (checkUserPass) {
                 const user = await this.networksApiUrl(findOneByEmailUser.ApiToken);
+                await this.clearDataNetworks();
                 await this.saveDataNetworks(user);
                 return { message: 'User found, and save database.' }
             } else {
@@ -62,6 +64,6 @@ export class NetworkService {
         }
     }
     async clearDataNetworks() {
-
+        await this.NetworkRepository.createQueryBuilder('networks').delete().from(NetworkEntity).execute();
     }
 }
