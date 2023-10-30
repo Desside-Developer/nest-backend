@@ -20,7 +20,7 @@ export class OfferService {
       email: data.email,
     });
     if (!findOneByEmailUser) {
-      return { message: 'Your email not corrected!' };
+      return { message: 'Your email is not correct!' };
     } else {
       const checkUserPass = await bcrypt.compare(
         String(data.password),
@@ -28,32 +28,47 @@ export class OfferService {
       );
       if (checkUserPass) {
         if (findOneByEmailUser.ApiToken === null) {
-          return { message: 'You dont have ApiToken' };
+          return { message: "You don't have an ApiToken" };
         } else {
-          const user = await this.offersApiUrl(findOneByEmailUser.ApiToken);
-          await this.clearDataOffers();
+          const user = await this.offersApiUrl(findOneByEmailUser.ApiToken, offsetValue, showValue);
+
+          // await this.clearDataOffers();
           await this.saveDataOffers(user);
-          return { message: 'User found, and save database.' };
+          return { message: 'User found, and data saved to the database.' };
         }
       } else {
-        return { message: 'Your password not corrected!' };
+        return { message: 'Your password is not correct!' };
       }
     }
   }
-  async offersApiUrl(ApiToken) {
-    const getApiNetworks = `https://cpaw.cat/api/mon/offer.json?token=${ApiToken}`;
-    const headers = {
-      offset: 0,
-      show: 500,
-    };
-    const response = await axios.get(getApiNetworks);
-    return response.data;
+
+  async fetchAndSaveOffers(ApiToken, offset = 0, show = 500) {
+    for (;;) {
+      const offersData = await this.offersApiUrl(ApiToken, offset, show);
+
+      if (offersData.length === 0) {
+        break;
+      }
+
+      await this.saveDataOffers(offersData);
+      offset += show;
+      console.log(`Received and saved ${offset} offers.`);
+    }
+
+    console.log('All offers have been received and saved.');
   }
+
+  async offersApiUrl(ApiToken, offset, show) {
+    const getApiNetworks = `https://cpaw.cat/api/mon/offers.json?token=${ApiToken}&offset=${offset}&show=${show}`;
+    const response = await axios.get(getApiNetworks);
+    return response.data.offers || [];
+  }
+
   async saveDataOffers(data) {
-    const offerEntities = [];
     for (const key in data) {
       const offerData = data[key];
-      const createNetworks = this.OfferRepository.create({
+
+      const offerEntity = this.OfferRepository.create({
         OfferId: offerData.id,
         active: offerData.active,
         name: offerData.name,
@@ -68,24 +83,19 @@ export class OfferService {
         sub: offerData.sub,
         goal: offerData.goal,
         goals: offerData.goals,
-        geo: offerData.geo,
+        geo: JSON.stringify(offerData.geo),
         private: offerData.private,
       });
-      offerEntities.push(createNetworks);
+      try {
+        await this.OfferRepository.save(offerEntity);
+        console.log(`Data for offer ${offerData.id} saved successfully`);
+      } catch (error) {
+        console.error(`Error saving data for offer ${offerData.id}:`, error);
+      }
     }
-    try {
-      await this.OfferRepository.save(offerEntities);
-      console.log('Data saved successfully');
-    } catch (error) {
-      console.error('Error saving data:', error);
-    }
+    console.log('All offers have been saved.');
   }
-  async clearDataOffers() {
-    await this.OfferRepository.createQueryBuilder('networks')
-      .delete()
-      .from(NetworkEntity)
-      .execute();
-  }
+
 
   // Watch Kitty Api (InfoOffers)
   // @Cron(CronExpression.EVERY_DAY_AT_2AM)

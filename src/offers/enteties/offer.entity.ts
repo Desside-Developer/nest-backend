@@ -2,38 +2,38 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('offers')
 export class OfferEntity {
-  @PrimaryGeneratedColumn({})
+  @PrimaryGeneratedColumn()
   id: number;
-  @Column({ type: 'text', nullable: true })
-  OfferId: string;
-  @Column({ type: 'text', nullable: true })
-  active: string;
+  @Column({ type: 'int', nullable: true })
+  OfferId: number;
+  @Column({ type: 'boolean', nullable: true })
+  active: boolean;
   @Column({ type: 'text', nullable: true })
   name: string;
   @Column({ type: 'text', nullable: true })
   info: string;
-  @Column({ type: 'text', nullable: true })
-  nid: string;
+  @Column({ type: 'int', nullable: true })
+  nid: number;
   @Column({ type: 'text', nullable: true })
   network: string;
   @Column({ type: 'text', nullable: true })
   url: string;
-  @Column({ type: 'text', nullable: true })
-  add: string;
-  @Column({ type: 'text', nullable: true })
-  time: string;
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'boolean', nullable: true })
+  add: boolean;
+  @Column({ type: 'int', nullable: true })
+  time: number;
+  @Column({ type: 'datetime', nullable: true })
   date: string;
-  @Column({ type: 'text', nullable: true })
-  first: string;
-  @Column({ type: 'text', nullable: true })
-  sub: string;
-  @Column({ type: 'text', nullable: true })
-  goal: string;
-  @Column({ type: 'text', nullable: true })
-  goals: string;
+  @Column({ type: 'int', nullable: true })
+  first: number;
+  @Column({ type: 'boolean', nullable: true })
+  sub: boolean;
+  @Column({ type: 'int', nullable: true })
+  goal: number;
+  @Column({ type: 'int', nullable: true })
+  goals: number;
   @Column({ type: 'text', nullable: true })
   geo: string;
-  @Column({ type: 'text', nullable: true })
-  private: string;
+  @Column({ type: 'boolean', nullable: true })
+  private: boolean;
 }
